@@ -8,6 +8,6 @@ readme = "README.md"
 repository = "https://github.com/frederik-uni/langid"
 documentation = "https://docs.rs/langid"
 description = "A fast and lightweight language identification library in Rust, inspired by py3langid."
-keywords = ["language", "detection", "nlp", "langid", "py3langid", "text"]
+keywords = ["language", "detection", "nlp", "langid", "py3langid"]
 
 [dependencies]
