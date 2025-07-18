@@ -1,0 +1,13 @@
+[package]
+keywords = ["language", "detection", "nlp", "langid","py3langid" "text"]
+
+name = "langid"
+version = "1.0.0"
+edition = "2024"
+license = "MIT"
+description = "A fast and lightweight language identification library in Rust, inspired by py3langid."
+repository = "https://github.com/frederik-uni/langid"
+documentation = "https://docs.rs/langid"
+readme = "README.md"
+
+[dependencies]
