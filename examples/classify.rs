@@ -1,7 +1,7 @@
-use langid::Model;
+use langid_rs::Model;
 
 fn main() {
-    let model = Model::load().unwrap();
+    let model = Model::load(false).unwrap();
     //model.set_langs(Some(vec![...])).unwrap();
 
     let text = "This text is in English.";

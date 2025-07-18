@@ -90,9 +90,15 @@ impl Model {
         Ok(())
     }
 
+    fn compute_softmax(&self, pd: &[f32]) -> Vec<f32> {
+        pd.iter()
+            .map(|vi| 1.0 / pd.iter().map(|vj| (vj - vi).exp()).sum::<f32>())
+            .collect()
+    }
+
     fn apply_norm_probs(&self, pd: Vec<f32>) -> Vec<f32> {
         if self.norm_probs {
-            todo!("pd = 1/np.exp(pd[None,:] - pd[:,None]).sum(1)")
+            self.compute_softmax(&pd)
         } else {
             pd
         }
@@ -146,13 +152,11 @@ impl Model {
         // pdc + self.data.nb_pc
 
         // dot
-        let m = fv.len();
         let n = self.data().nb_pc.len();
-
         let mut pdc = vec![0f32; n];
 
-        for i in 0..m {
-            let fv_val = fv[i] as f32;
+        for (i, fv_val) in fv.into_iter().enumerate() {
+            let fv_val = fv_val as f32;
             for j in 0..n {
                 pdc[j] += fv_val * self.data().nb_ptc[i][j];
             }
@@ -241,7 +245,7 @@ fn read_i32_vec(reader: &mut impl Read, len: usize) -> io::Result<Vec<i32>> {
 }
 
 impl Model {
-    pub fn load() -> io::Result<Self> {
+    pub fn load(norm_probs: bool) -> io::Result<Self> {
         let mut reader = Cursor::new(include_bytes!("model.bin"));
 
         let rows = read_u32(&mut reader)? as usize;
@@ -280,7 +284,7 @@ impl Model {
         let nb_numfeats = nb_ptc.iter().map(|v| v.len()).sum::<usize>() / nb_pc.len();
         assert_eq!(bytes_remaining(&mut reader)?, 0);
         Ok(Self {
-            norm_probs: false,
+            norm_probs,
             used_data: None,
             nb_numfeats,
             data: ModelData {
